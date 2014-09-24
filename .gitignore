@@ -6,8 +6,12 @@
 !app/cache/.gitkeep
 !app/logs/.gitkeep
 /build/
-/vendor/
-/bin/
+**/vendor/*
+**/node_modules/*
+**/dev/
+vendor/
+node_modules/
+dev/
 /composer.phar
 /*.md
 /LICENSE

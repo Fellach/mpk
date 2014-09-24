@@ -62,9 +62,9 @@ doctrine:
 doctrine_mongodb:
     connections:
         default:
-            server: "%document_host%"
+            server: %document_host%
             options: {}
-    default_database: "%document_name%"
+    default_database: %document_name%
     document_managers:
         default:
             auto_mapping: true
@@ -77,3 +77,14 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+fos_rest:
+    routing_loader:
+        default_format: json
+    param_fetcher_listener: true
+    body_listener: true
+    format_listener: true
+    view:
+        view_response_listener: 'force'
+
+sensio_framework_extra:
+    view: {annotations: false}
