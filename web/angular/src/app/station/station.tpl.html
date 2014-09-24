@@ -1,0 +1,23 @@
+<div ng-show="model.station === null" class="loading"><div class="loader"></div></div>
+<h2>
+    {{ model.station.name }}
+    <small>{{ model.station.time | date : 'H:mm' }}</small>
+</h2>
+
+<table class="table table-striped table-responsive">
+    <thead>
+        <tr>
+            <th>line</th>
+            <th>direction</th>
+            <th>arrival</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="departure in model.station.departures">
+            <td> {{ departure.line }} </td>
+            <td> {{ departure.direction }} </td>
+            <td> {{ departure.arrival }} </td>
+        </tr>
+    </tbody>
+    
+</table>

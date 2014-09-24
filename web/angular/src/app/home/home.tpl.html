@@ -1,0 +1,14 @@
+<h1>Timetables on stations</h1>
+<hr>
+<div class="row">
+    <div class="col-sm-4">
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="station in model.stations">
+                <span ng-click="getStation(station)"> {{ station.name }} </span>
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-8">
+        <main ui-view="station">choose a station</main>
+    </div>
+</div>

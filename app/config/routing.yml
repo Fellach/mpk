@@ -2,4 +2,3 @@ mpkapi:
     resource: MPK\APIBundle\Controller\StationsController
     type:     rest
     prefix:   /api/
-
