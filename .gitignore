@@ -6,7 +6,8 @@
 !app/cache/.gitkeep
 !app/logs/.gitkeep
 /build/
-/vendor/
+/vendor/*
+/node_modules/*
 /bin/
 /composer.phar
 /*.md
