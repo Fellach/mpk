@@ -23,7 +23,8 @@
         "doctrine/mongodb-odm": "1.0.*@dev",
         "doctrine/mongodb-odm-bundle": "3.0.*@dev",
         "jms/serializer-bundle": "master-dev",
-        "doctrine/doctrine-fixtures-bundle": "2.2.*"
+        "doctrine/doctrine-fixtures-bundle": "2.2.*",
+        "misd/guzzle-bundle": "~1.0"
 	},
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
