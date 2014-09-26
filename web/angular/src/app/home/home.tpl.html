@@ -3,8 +3,8 @@
 <div class="row">
     <div class="col-sm-4">
         <ul class="list-group">
-            <li class="list-group-item" ng-repeat="station in model.stations">
-                <span ng-click="getStation(station)"> {{ station.name }} </span>
+            <li class="list-group-item" ng-repeat="station in model.stations" ng-click="getStation(station)">
+                {{ station.name }}
             </li>
         </ul>
     </div>
