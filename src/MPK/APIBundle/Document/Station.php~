@@ -1,0 +1,29 @@
+<?php
+
+namespace MPK\APIBundle\Document;
+
+use Doctrine\ODM\MongoDB\Mapping\Annotations as Mongo;
+
+/**
+ * @Mongo\Document
+ */
+class Station
+{
+    /**
+     * @Mongo\Id
+     */
+    protected $id;
+    
+    /**
+     * @Mongo\String
+     */
+    protected $name;
+    
+    /**
+     * @Mongo\EmbedMany(
+     *      targetDocument="Line",
+     *      strategy="set"
+     * )
+     */
+    protected $lines;
+}
