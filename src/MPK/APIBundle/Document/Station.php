@@ -9,6 +9,11 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as Mongo;
  */
 class Station
 {
+    
+    const dayweek = 'robocze';
+    const saturday = 'soboty';
+    const holiday = 'święta';
+    
     /**
      * @Mongo\Id
      */

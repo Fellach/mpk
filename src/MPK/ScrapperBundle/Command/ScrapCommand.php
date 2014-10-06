@@ -17,6 +17,8 @@ class ScrapCommand extends ContainerAwareCommand
 
     private $output;
     private $uniqueUriDictionary;
+    private $baseUri;
+    private $client;
 
     protected function configure()
     {
@@ -30,19 +32,27 @@ class ScrapCommand extends ContainerAwareCommand
     {
         $output->writeln("start");
         $this->output = $output;
-        $baseUri = 'http://rozklady.mpk.krakow.pl/aktualne/';
+        $this->baseUri = 'http://rozklady.mpk.krakow.pl/aktualne/';
         $this->uniqueUriDictionary['przystan.htm'] = 'przystan.htm';
+        $this->client = $this->getContainer()->get('guzzle.client');
+        
+        $this->doCommand();
 
+        $output->writeln("finish");
+    }
+    
+    
+    private function doCommand()
+    {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getContainer()->get('doctrine_mongodb')->getManager();
-        $client = $this->getContainer()->get('guzzle.client');
 
-        $crawler = $this->getCrawler($client, $baseUri . 'przystan.htm');
+        $crawler = $this->getCrawler('przystan.htm');
 
         $stationsUri = $this->getChildrenUri($crawler, 'a[href*="p/"]');
 
         foreach ($stationsUri as $stationName => $stationUri) {
-            $crawler = $this->getCrawler($client, $baseUri . $stationUri);
+            $crawler = $this->getCrawler($stationUri);
 
             $station = new Station();
             $station->setName($stationName);
@@ -57,32 +67,23 @@ class ScrapCommand extends ContainerAwareCommand
                 $line->setName($lineAndDirection[0]);
                 $line->setDirection($lineAndDirection[1]);
 
-                $crawler = $this->getCrawler($client, $baseUri . str_replace('r', 't', $lineUri));
-                $crawler->filter('.celldepart table tr')->each(function($node, $i){
-                    
-                    /* TODO:
-                     * 
-                     * filter td.cellhour ->text()
-                     * filter td.cellmin  explode ( ->text())
-                     * 
-                     * line->addDepart (new Departures)
-                     * 
-                     * for workdays, saturdays, holidays
-                     */
-                    
-                });
-                
+                $crawler = $this->getCrawler(str_replace('r', 't', $lineUri));
+                try {
+                    $crawler->filter('.celldepart > table > tr ')->each(function(Crawler $row, $i) use (&$line) {
+                        $this->setDepartures($row, $line);
+                    });
+                } catch (\Exception $e){
+                    $this->output->writeln(sprintf("%s: %s", $lineUri, $e->getMessage()));
+                    continue;
+                }
+
                 $station->addLine($line);
             }
 
             $em->persist($station);
-            //$em->flush();
+            $em->flush();
 
-
-            break; //to remove
         }
-
-        $output->writeln("finish");
     }
 
     /**
@@ -91,14 +92,17 @@ class ScrapCommand extends ContainerAwareCommand
      * @param string $uri
      * @return Crawler
      */
-    private function getCrawler($client, $uri)
+    private function getCrawler($uri)
     {
         try {
             return new Crawler(
-                    $client
-                            ->get($uri)
-                            ->send()
-                            ->getBody(true)
+                    str_replace(
+                            '<?xml version="1.0" encoding="iso-8859-2"?>', '', //remove xml-doctype
+                            $this->client
+                                    ->get($this->baseUri . $uri)
+                                    ->send()
+                                    ->getBody(true)
+                    )
             );
         } catch (\Exception $e) {
             $this->output->writeln(sprintf("%s: %s", $uri, $e->getMessage()));
@@ -111,7 +115,7 @@ class ScrapCommand extends ContainerAwareCommand
      * @param string $pattern
      * @return array uri-s
      */
-    public function getChildrenUri(Crawler $crawler, $pattern)
+    private function getChildrenUri(Crawler $crawler, $pattern)
     {
         $collection = [];
         $crawler->filter($pattern)->each(function (Crawler $node, $i) use (&$collection) {
@@ -124,40 +128,63 @@ class ScrapCommand extends ContainerAwareCommand
                 $this->uniqueUriDictionary[$href] = null;
             }
         });
-        $this->output->writeln(print_r($collection, true));       
+        $this->output->writeln(print_r($collection, true));
         return $collection;
     }
 
+    /**
+     * 
+     * @param \Symfony\Component\DomCrawler\Crawler $row
+     * @param \MPK\APIBundle\Document\Line $line
+     */
+    private function setDepartures(Crawler $row, Line &$line)
+    {
+        if ($row->filter('td')->count() === 6) {
+
+            $this->setDeparture(Station::dayweek, 
+                    $row->filter('td')->eq(0)->text(), 
+                    $row->filter('td')->eq(1)->text(),
+                    $line);
+
+            $this->setDeparture(Station::saturday, 
+                    $row->filter('td')->eq(2)->text(), 
+                    $row->filter('td')->eq(3)->text(), 
+                    $line);
+
+            $this->setDeparture(Station::holiday, 
+                    $row->filter('td')->eq(4)->text(), 
+                    $row->filter('td')->eq(5)->text(), 
+                    $line);
+        }
+        elseif ($row->filter('td')->count() === 2) {
+            $this->setDeparture(Station::dayweek, 
+                    $row->filter('td')->eq(0)->text(), 
+                    $row->filter('td')->eq(1)->text(),
+                    $line);
+            
+            $this->setDeparture(Station::saturday, 
+                    $row->filter('td')->eq(0)->text(), 
+                    $row->filter('td')->eq(1)->text(),
+                    $line);
+            
+            $this->setDeparture(Station::holiday, 
+                    $row->filter('td')->eq(0)->text(), 
+                    $row->filter('td')->eq(1)->text(),
+                    $line);
+        }
+    }
+    
+    private function setDeparture($day, $hour, $minutes, Line &$line)
+    {
+        $minutes = explode(' ', $minutes);
+        foreach ($minutes as $minute) {
+            $minute = rtrim($minute, 'A');
+            if (is_numeric($minute)) {
+                $line->addDeparture(new Departure($day, new \DateTime("$hour:$minute")));
+            }
+        }
+    }
+
 }
+
 ?>
-
-<!--<table border = "1" width = "100%" cellspacing = "4" cellpadding = "0">
-
-    <tr align = "center">
-        <td class = "cellday" colspan = "2">
-            <b><font class = "fontday" color = "#000000">Dzień powszedni</font></b>
-        </td>
-        <td class = "cellday" colspan = "2"><b><font class = "fontday" color = "#000000">Soboty</font></b>
-        </td>
-        <td class = "cellday" colspan = "2"><b><font class = "fontday" color = "#000000">Święta</font></b>
-        </td>
-    </tr>
-    <tr>
-        <td class = "cellhour" align = "center" width = "5%"><b><font class = "fonthour">4</b>
-        </td>
-        <td class = "cellmin" nowrap = "nowrap"><font class = "fontmin"> 26 46</font>
-        </td>
-        <td class = "cellhour" align = "center" width = "5%"><b><font class = "fonthour">4</b>
-        </td>
-        <td class = "cellmin" nowrap = "nowrap"><font class = "fontmin"> -</font>
-        </td>
-        <td class = "cellhour" align = "center" width = "5%"><b><font class = "fonthour">4</b>
-        </td>
-        <td class = "cellmin" nowrap = "nowrap"><font class = "fontmin"> -</font>
-        </td>
-    </tr>
-   
-    <tr>
-        <td class = "cellinfo" colspan = "6"><font class = "fontinfo1" color = "#000000">Zakłócenia w ruchu powodują zmiany czasów odjazdów.</font><br/><font class = "fontprzyp">A - Kurs przez: Nad Drwiną</font><br/><b><font class = "fontrozklad">Rozkład jazdy ważny od 22.09.2014 do odwołania</font></b><br/><br/><font class = "fontztm">MPK S.A. w Krakowie</font>
-        </td>
-    </tr></table>-->

@@ -6,7 +6,7 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
 
 class StationRepository extends DocumentRepository
 {
-
+    
     public function findAllStations()
     {
         $stations = $this->createQueryBuilder('Station')
@@ -74,11 +74,11 @@ class StationRepository extends DocumentRepository
     {
         switch (date('N', $date->getTimestamp())) {
             case 6:
-                return 'sobota';
+                return Station::saturday;
             case 7:
-                return 'niedziela';
+                return Station::holiday;
             default:
-                return 'roboczy';
+                return Station::dayweek;
         }
     }
 
