@@ -8,10 +8,16 @@
                 cachedData = data;
             },
             getStations: function(){
-                return false;
+                return cachedData.stations.length > 0;
             },
             getStation: function(id){
                 return false;
+            },
+            setStations: function(){
+                
+            },
+            setStation: function(){
+                
             }
         };
     });

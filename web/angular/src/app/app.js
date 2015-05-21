@@ -17,5 +17,6 @@
     'ui.router.state',
     'ui.router',
     'mpk.apiService',
+    'mpk.cacheService',
     'mpk.station',
 ])));

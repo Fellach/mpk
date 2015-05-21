@@ -2,7 +2,7 @@
 
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider.state('home.station', {
-            url: '/station/:id',
+            url: 'station/:id',
             views: {
                 "station": {
                     controller: 'StationController',
@@ -15,10 +15,9 @@
 
     app.controller('StationController', function ($scope, $stateParams, ApiService) {
         
-        $scope.model = $scope.$parent.model;
-
         var init = function() {
-            $scope.model.station = null;
+            $scope.model = $scope.$parent.model;
+            
             ApiService.getStation($stateParams.id);
         };
 
