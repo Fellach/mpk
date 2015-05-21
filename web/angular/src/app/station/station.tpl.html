@@ -16,7 +16,7 @@
         <tr ng-repeat="departure in model.station.departures">
             <td> {{ departure.line }} </td>
             <td> {{ departure.direction }} </td>
-            <td> {{ departure.arrival || 'now' }} </td>
+            <td> {{ departure.arrival ? departure.arrival + ' min' : 'now' }} </td>
         </tr>
     </tbody>
     
