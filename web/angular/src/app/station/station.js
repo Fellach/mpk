@@ -12,7 +12,9 @@
             data:{ pageTitle: 'Station' }
         });
     }]);
-
+    
+    var interval;
+    
     app.controller('StationController', function ($scope, $stateParams, $interval, ApiService) {
         
         var init = function() {
@@ -20,7 +22,9 @@
             
             ApiService.getStation($stateParams.id);
             
-            $interval(function(){
+            $interval.cancel(interval);
+            
+            interval = $interval(function(){
                 if (new Date($scope.model.station.time).getMinutes() !== new Date().getMinutes()) {
                     ApiService.getStation($stateParams.id);
                 }
