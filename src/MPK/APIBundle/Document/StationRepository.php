@@ -41,7 +41,8 @@ class StationRepository extends DocumentRepository
         foreach ($station->getLines() as $line) {
             $this->filterDepartures($line, $date, $departures);
         }
-
+        $departures = array_slice($departures, 0, 5);
+        
         return [
             "departures" => $departures,
             "name" => $station->getName(),
@@ -54,20 +55,24 @@ class StationRepository extends DocumentRepository
         $day = $this->getDayOfWeek($date);
 
         foreach ($line->getDepartures() as $departure) {
-            if ($departure->getDay() === $day && $departure->getDate()->getTimestamp() < $date->getTimestamp()) {
+            if ($departure->getDay() === $day) {
+                
                 $diff = $date->diff(new \DateTime($departure->getDate()->format('H:i')));
-                $departures[] = [
-                    "line" => $line->getName(),
-                    "direction" => $line->getDirection(),
-                    "arrival" => $diff->i + ($diff->h * 60)
-                ];
+                $arrival = ($diff->i + ($diff->h * 60)) * ($diff->invert === 1 ? -1 : 1 );
+                
+                if ($arrival >= 0){
+                    $departures[] = [
+                        "line" => $line->getName(),
+                        "direction" => $line->getDirection(),
+                        "arrival" => $arrival
+                    ];
+                }
             }
         }
 
         usort($departures, function($a, $b) {
             return $a["arrival"] <= $b["arrival"] ? -1 : 1;
         });
-        $departures = array_slice($departures, 0, 5);
     }
 
     private function getDayOfWeek(\DateTime $date)

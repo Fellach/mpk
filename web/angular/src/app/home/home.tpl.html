@@ -1,9 +1,10 @@
-<h1>Timetables on stations</h1>
-<hr>
+<div class="page-header">
+    <h1>Timetables on stations</h1>
+</div>
 <div class="row">
     <div class="col-sm-4">
         <ul class="list-group">
-            <li class="list-group-item" ng-repeat="station in model.stations" ng-click="getStation(station)">
+            <li class="list-group-item" ng-repeat="station in model.stations">
                 <a ui-sref="home.station({id: station.id})">{{ station.name }}</a>
             </li>
         </ul>

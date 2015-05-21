@@ -38,7 +38,7 @@
             getStation: function(id){
                 if (!CacheService.getStation(id)) {
                     getStation(id).then(function(){
-                        CacheService.setStation();
+                        CacheService.setStation(id);
                     });
                 }
             },
