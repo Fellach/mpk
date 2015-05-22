@@ -11,3 +11,23 @@
         .opacity(0.8);
     }
 }
+
+.ng-enter {
+    -webkit-transition: .4s easy-in all;
+    transition: .4s ease-in all;
+    opacity: 0;
+}
+.ng-enter-active {
+    opacity: 1;
+}
+
+.departures .ng-enter {
+    transform: translateX(-100px);
+}
+.departures .ng-enter-active {
+    transform: translateX(0px);
+}
+
+th:nth-child(2) {
+    width: 66%;
+}

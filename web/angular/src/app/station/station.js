@@ -35,5 +35,6 @@
     });
 
 }(angular.module("mpk.station", [
-    'ui.router'
+    'ui.router',
+    'ngAnimate',
 ])));
