@@ -14,7 +14,7 @@ use MPK\APIBundle\Document\Departure;
 
 class ScrapCommand extends ContainerAwareCommand
 {
-
+    private $input;
     private $output;
     private $uniqueUriDictionary;
     private $baseUri;
@@ -23,14 +23,16 @@ class ScrapCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-                ->setName('mpk:scrap')
-                ->setDescription('Crawler and scrapper for rozklady.mpk.krakow.pl')
+            ->setName('mpk:scrap')
+            ->setDescription('Crawler and scrapper for rozklady.mpk.krakow.pl')
+            ->addOption('verbose', null, InputOption::VALUE_NONE, 'echo lists')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln("start");
+        $this->input = $input;
         $this->output = $output;
         $this->baseUri = 'http://rozklady.mpk.krakow.pl/aktualne/';
         $this->uniqueUriDictionary['przystan.htm'] = 'przystan.htm';
@@ -87,7 +89,9 @@ class ScrapCommand extends ContainerAwareCommand
 
             $em->persist($station);
             $em->flush();
-
+            if ($this->input->getOption('verbose')) {
+                $this->output->writeln(sprintf("-----------\nSaved: %s", $stationName));
+            }
         }
     }
 
@@ -133,7 +137,9 @@ class ScrapCommand extends ContainerAwareCommand
                 $this->uniqueUriDictionary[$href] = null;
             }
         });
-        $this->output->writeln(print_r($collection, true));
+        if ($this->input->getOption('verbose')) {
+            $this->output->writeln(print_r($collection, true));
+        }
         return $collection;
     }
 
