@@ -1,23 +1,24 @@
 <div ng-show="model.station === null" class="loading"><div class="loader"></div></div>
-<h2>
-    {{ model.station.name }}
-    <small>{{ model.station.time | date : 'H:mm' }}</small>
-</h2>
-<hr>
-<table class="table table-striped table-responsive departures">
-    <thead>
-        <tr>
-            <th>line</th>
-            <th>direction</th>
-            <th>arrival</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="departure in model.station.departures">
-            <td> {{ departure.line }} </td>
-            <td> {{ departure.direction }} </td>
-            <td> {{ departure.arrival ? departure.arrival + ' min' : 'now' }} </td>
-        </tr>
-    </tbody>
-    
-</table>
+<div sticky>
+    <h2>
+        {{ model.station.name }}
+        <small>{{ model.station.time | date : 'H:mm' }}</small>
+    </h2>
+    <hr>
+    <table class="table table-striped table-responsive departures">
+        <thead>
+            <tr>
+                <th>line</th>
+                <th>direction</th>
+                <th>arrival</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="departure in model.station.departures">
+                <td> {{ departure.line }} </td>
+                <td> {{ departure.direction }} </td>
+                <td> {{ departure.arrival ? departure.arrival + ' min' : 'now' }} </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

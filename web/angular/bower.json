@@ -8,6 +8,7 @@
     "angular-mocks": "1.*",
     "bootstrap": "*",
     "angular-bootstrap": "*",
-    "angular-ui-router": "*"
+    "angular-ui-router": "*",
+    "ngSticky": "~1.7.9"
   }
 }

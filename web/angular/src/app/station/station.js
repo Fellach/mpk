@@ -38,4 +38,5 @@
     'ui.router',
     'ui.bootstrap',
     'ngAnimate',
+    'sticky'
 ])));
