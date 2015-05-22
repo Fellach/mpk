@@ -53,16 +53,21 @@ class ScrapCommand extends ContainerAwareCommand
 
         foreach ($stationsUri as $stationName => $stationUri) {
             $crawler = $this->getCrawler($stationUri);
-
-            $station = new Station();
-            $station->setName($stationName);
+            
+            $station = $em->getRepository('MPKAPIBundle:Station')->findOneByName($stationName);
+            if (!$station) {
+                $station = new Station();
+                $station->setName($stationName);
+            } else {
+                $station->clearLines();
+            }
 
             $linesUri = $this->getChildrenUri($crawler, 'li a[href^="../"]');
 
             foreach ($linesUri as $lineWithDirection => $lineUri) {
 
                 $lineAndDirection = explode(' - > ', $lineWithDirection);
-
+                
                 $line = new Line();
                 $line->setName($lineAndDirection[0]);
                 $line->setDirection($lineAndDirection[1]);

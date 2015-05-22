@@ -33,7 +33,7 @@ class Station
     protected $lines;
     public function __construct()
     {
-        $this->lines = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->clearLines();
     }
     
     /**
@@ -96,5 +96,10 @@ class Station
     public function getLines()
     {
         return $this->lines;
+    }
+    
+    public function clearLines()
+    {
+        $this->lines = new \Doctrine\Common\Collections\ArrayCollection();
     }
 }
