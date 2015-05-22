@@ -5,16 +5,16 @@
     <div class="col-sm-4">
         <div class="input-group search">
             <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-            <input type="text" class="form-control" ng-model="search" placeholder="Search for..." ng-change="search.length > 0 ? (isOpen = true) && (closeOthers = false) : false"/>
+            <input type="text" class="form-control" ng-model="list.search" placeholder="Search for..." ng-keyup="list.search.length > 0 ? (list.isOpen = true) && (list.closeOthers = false) : (list.isOpen = false) && (list.closeOthers = true)"/>
         </div>
         <hr>
-        <accordion close-others="closeOthers" ng-init="closeOthers = true">
-            <accordion-group ng-repeat="(id, group) in model.stations" is-open="isOpen">
+        <accordion close-others="list.closeOthers" ng-init="list.closeOthers = true">
+            <accordion-group ng-repeat="(id, group) in model.stations" is-open="list.isOpen">
                 <accordion-heading>
                     <div class="text-center">{{ id }}</div>
                 </accordion-heading>
                 <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="station in group | filter: {$: search} | orderBy: '+name'">
+                    <li class="list-group-item" ng-repeat="station in group | filter: {$: list.search} | orderBy: '+name'">
                         <a ui-sref="home.station({id: station.id})">{{ station.name }}</a>
                     </li>
                 </ul>
