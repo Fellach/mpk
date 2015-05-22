@@ -77,7 +77,7 @@ module.exports = function(grunt) {
         vendor_files: {
             js: [
                 'vendor/angular/angular.js',
-                'vendor/angular-animate/angular-animate.min.js',
+                'vendor/angular-animate/angular-animate.js',
                 'vendor/angular-bootstrap/ui-bootstrap-tpls.min.js',
                 'vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js',
                 'vendor/angular-ui-router/release/angular-ui-router.min.js',
@@ -613,11 +613,12 @@ module.exports = function(grunt) {
 
         // this.fileSrc comes from either build:src, compile:src, or karmaconfig:src in the index config defined above
         // see - http://gruntjs.com/api/inside-tasks#this.filessrc for documentation
+        var self = this;
         var jsFiles = filterForJS(this.filesSrc).map(function (file) {
-            return file.replace(dirRE, '');
+            return self.data.dir.replace('../', '') + '/' + file.replace(dirRE, '');
         });
         var cssFiles = filterForCSS(this.filesSrc).map(function (file) {
-            return file.replace(dirRE, '');
+            return self.data.dir.replace('../', '') + '/' + file.replace(dirRE, '');
         });
 
         // this.data.dir comes from either build:dir, compile:dir, or karmaconfig:dir in the index config defined above

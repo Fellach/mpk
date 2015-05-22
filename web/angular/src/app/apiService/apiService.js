@@ -2,7 +2,7 @@
 
     app.factory('ApiService', function ($http, CacheService) {
         
-        var baseUrl = 'http://mpk.dev/app_dev.php/api/',
+        var baseUrl = 'http://mpk.dev/api/app_dev.php/v1/',
             data = { stations: [], station: {} },
             
             getStations = function(){
