@@ -4,11 +4,12 @@
         
         var baseUrl = 'http://mpk.dev/app_dev.php/api/',
             data = { stations: [], station: {} },
+            
             getStations = function(){
                 return $http
                     .get(baseUrl + 'stations')
-                    .success(function(d){
-                        data.stations = d.stations;
+                    .success(function(response){
+                        data.stations = response.stations;
                     })
                     .error(function(){
                         console.log('error');
@@ -17,8 +18,8 @@
             getStation = function(id){
                 return $http
                     .get(baseUrl + 'stations/' + id)
-                    .success(function(d){
-                        data.station = d.station;
+                    .success(function(response){
+                        data.station = response.station;
                     })
                     .error(function(){
                         console.log('error');

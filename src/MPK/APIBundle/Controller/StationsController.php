@@ -13,7 +13,7 @@ class StationsController extends FOSRestController
      */
     public function getStationsAction()
     {       
-        $stations = $this->get('doctrine_mongodb')->getRepository('MPKAPIBundle:Station')->findAllStations();
+        $stations = $this->get('doctrine_mongodb')->getRepository('MPKAPIBundle:Station')->findAllStationsGrouped();
 
         return [
             "stations" => $stations

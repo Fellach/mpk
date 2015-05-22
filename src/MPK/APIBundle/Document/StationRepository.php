@@ -23,6 +23,23 @@ class StationRepository extends DocumentRepository
         }
         return $result;
     }
+    
+    public function findAllStationsGrouped()
+    {
+        $stations = $this->createQueryBuilder('Station')
+                ->select('id', 'name')
+                ->getQuery()
+                ->execute();
+
+        $result = [];
+        foreach ($stations as $station) {
+            $result[$station->getName()[0]][] = [
+                "name" => $station->getName(),
+                "id" => $station->getId(),
+            ];
+        }
+        return $result;
+    }
 
     public function findStation($id)
     {

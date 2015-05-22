@@ -36,5 +36,6 @@
 
 }(angular.module("mpk.station", [
     'ui.router',
+    'ui.bootstrap',
     'ngAnimate',
 ])));

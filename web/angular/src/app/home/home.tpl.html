@@ -3,13 +3,25 @@
 </div>
 <div class="row">
     <div class="col-sm-4">
-        <ul class="list-group">
-            <li class="list-group-item" ng-repeat="station in model.stations">
-                <a ui-sref="home.station({id: station.id})">{{ station.name }}</a>
-            </li>
-        </ul>
+        <div class="input-group search">
+            <span class="input-group-addon">?</span>
+            <input type="text" class="form-control" ng-model="search" placeholder="Search for..." ng-change="search.length > 0 ? (isOpen = true) && (closeOthers = false) : false"/>
+        </div>
+        <hr>
+        <accordion close-others="closeOthers" ng-init="closeOthers = true">
+            <accordion-group ng-repeat="(id, group) in model.stations" is-open="isOpen">
+                <accordion-heading>
+                    <div>{{ id }}</div>
+                </accordion-heading>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="station in group| filter: {$: search} | orderBy: '+name'">
+                        <a ui-sref="home.station({id: station.id})">{{ station.name}}</a>
+                    </li>
+                </ul>
+            </accordion-group>
+        </accordion>
     </div>
     <div class="col-sm-8">
-        <main ui-view="station">choose a station</main>
+        <main ui-view="station"><p class="choose-text">choose a station</p></main>
     </div>
 </div>

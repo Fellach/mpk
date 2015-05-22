@@ -18,13 +18,15 @@
                 return false;
             },
             getStation: function(id){
-                for (var i = 0; i < cachedData.stations.length; i++) {
-                    if (cachedData.stations[i].id === id) {
-                        if (!cachedData.stations[i].details || new Date(cachedData.stations[i].details.time).getMinutes() !== new Date().getMinutes()){
-                            return false;
+                for (var i in cachedData.stations) {
+                    for (var j = 0; j < cachedData.stations[i].length; j++) {
+                        if (cachedData.stations[i][j].id === id) {
+                            if (!cachedData.stations[i][j].details || new Date(cachedData.stations[i][j].details.time).getMinutes() !== new Date().getMinutes()){
+                                return false;
+                            }
+                            cachedData.station = cachedData.stations[i][j].details;
+                            return true;
                         }
-                        cachedData.station = cachedData.stations[i].details;
-                        return true;
                     }
                 }
                 return false;
@@ -34,10 +36,12 @@
                 localStorage.setItem(storageKeyDate, new Date());
             },
             setStation: function(id){
-                for (var i = 0; i < cachedData.stations.length; i++) {
-                    if (cachedData.stations[i].id === id) {
-                        cachedData.stations[i].details = cachedData.station;
-                        break;
+                for (var i in cachedData.stations) {
+                    for (var j = 0; j < cachedData.stations[i].length; j++) {
+                        if (cachedData.stations[i][j].id === id) {
+                            cachedData.stations[i][j].details = cachedData.station;
+                            return;
+                        }
                     }
                 }
             }
