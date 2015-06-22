@@ -25,7 +25,7 @@ class ScrapCommand extends ContainerAwareCommand
         $this
             ->setName('mpk:scrap')
             ->setDescription('Crawler and scrapper for rozklady.mpk.krakow.pl')
-            ->addOption('verbose', null, InputOption::VALUE_NONE, 'echo lists')
+            ->addOption('talkative', null, InputOption::VALUE_NONE, 'echo lists')
         ;
     }
 
