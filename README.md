@@ -4,4 +4,4 @@ Timetables for Krakow buses. API have been created with Symfony2 and MongoDB, an
 
 Once a day cron runs a scrap command to update the timetables. Client has a cache.
 
-Demo will appear soon.
+Demo can be found at [mpk.mfeleniak.sites.polcode.net](http://mpk.mfeleniak.sites.polcode.net/). 
