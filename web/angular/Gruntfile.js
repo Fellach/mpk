@@ -609,6 +609,8 @@ module.exports = function(grunt) {
     // the list into variables for the template to use and then runs the
     // compilation.
     grunt.registerMultiTask('index', 'Process index.html template', function () {
+        var baseUrl = grunt.config('pkg.baseUrl' + "_" + this.target);
+        grunt.log.writeln(baseUrl);
         var dirRE = new RegExp('^(' + grunt.config('build_dir') + '|' + grunt.config('compile_dir') + ')\/', 'g');
 
         // this.fileSrc comes from either build:src, compile:src, or karmaconfig:src in the index config defined above
@@ -632,7 +634,8 @@ module.exports = function(grunt) {
                         styles: cssFiles,
                         version: grunt.config('pkg.version'),
                         author: grunt.config('pkg.author'),
-                        date: grunt.template.today("yyyy")
+                        date: grunt.template.today("yyyy"),
+                        baseUrl: baseUrl
                     }
                 });
             }

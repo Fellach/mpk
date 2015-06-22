@@ -6,11 +6,11 @@
     <!-- font awesome from BootstrapCDN -->
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-    <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
-    <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
+    <!-- compiled CSS -->
+    <link rel="stylesheet" type="text/css" href="public/assets/mpk-0.0.1.css" />
 
-    <!-- compiled JavaScript --><% scripts.forEach( function ( file ) { %>
-    <script type="text/javascript" src="<%= file %>"></script><% }); %>
+    <!-- compiled JavaScript -->
+    <script type="text/javascript" src="public/assets/mpk-0.0.1.js"></script>
 </head>
 <body>
     <header>
@@ -29,10 +29,10 @@
     <div class="container" ui-view="main"></div>
     <hr>
     <footer class="container">
-        &copy; <%= date %> <%= author %>
+        &copy; 2015 Marcin Feleniak
     </footer>
     <script>
-        var baseUrl = '<%= baseUrl  %>'
+        var baseUrl = 'http://mpk.mfeleniak.sites.polcode.net/api/v1/'
     </script>
 </body>
 </html>
