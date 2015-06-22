@@ -5,7 +5,8 @@
     <div class="col-sm-4">
         <div class="input-group search">
             <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-            <input type="text" class="form-control" ng-model="list.search" placeholder="Search for..." ng-keyup="list.search.length > 0 ? (list.isOpen = true) && (list.closeOthers = false) : (list.isOpen = false) && (list.closeOthers = true)"/>
+            <input type="search" class="form-control" ng-model="list.search" placeholder="Search for..." ng-keyup="list.search.length > 0 ? (list.isOpen = true) && (list.closeOthers = false) : (list.isOpen = false) && (list.closeOthers = true)"/>
+            <span ng-show="!!list && list.search" class="input-group-addon"><i class="glyphicon glyphicon-remove" ng-click="list = null"></i></span>
         </div>
         <hr>
         <accordion close-others="list.closeOthers" ng-init="list.closeOthers = true">
