@@ -26,6 +26,7 @@ class ScrapCommand extends ContainerAwareCommand
             ->setName('mpk:scrap')
             ->setDescription('Crawler and scrapper for rozklady.mpk.krakow.pl')
             ->addOption('talkative', null, InputOption::VALUE_NONE, 'echo lists')
+            ->addOption('start', null, InputOption::VALUE_OPTIONAL, 'start from stations with letter')
         ;
     }
 
@@ -46,7 +47,7 @@ class ScrapCommand extends ContainerAwareCommand
     
     private function doCommand()
     {
-        /* @var $em \Doctrine\ORM\EntityManager */
+        /* @var $em \Doctrine\ODM\MongoDB\DocumentManager */
         $em = $this->getContainer()->get('doctrine_mongodb')->getManager();
 
         $crawler = $this->getCrawler('przystan.htm');
@@ -54,6 +55,9 @@ class ScrapCommand extends ContainerAwareCommand
         $stationsUri = $this->getChildrenUri($crawler, 'a[href*="p/"]');
 
         foreach ($stationsUri as $stationName => $stationUri) {
+            if (!empty($this->input->getOption('start')) && preg_match("/[A-" . $this->input->getOption('start') . "]/i", $stationName[0])) {
+                continue;
+            }
             $crawler = $this->getCrawler($stationUri);
             
             $station = $em->getRepository('MPKAPIBundle:Station')->findOneByName($stationName);
@@ -69,7 +73,7 @@ class ScrapCommand extends ContainerAwareCommand
             foreach ($linesUri as $lineWithDirection => $lineUri) {
 
                 $lineAndDirection = explode(' - > ', $lineWithDirection);
-                
+
                 $line = new Line();
                 $line->setName($lineAndDirection[0]);
                 $line->setDirection($lineAndDirection[1]);
@@ -89,7 +93,8 @@ class ScrapCommand extends ContainerAwareCommand
 
             $em->persist($station);
             $em->flush();
-            if ($this->input->getOption('verbose')) {
+            
+            if ($this->input->getOption('talkative')) {
                 $this->output->writeln(sprintf("-----------\nSaved: %s", $stationName));
             }
         }
@@ -137,7 +142,7 @@ class ScrapCommand extends ContainerAwareCommand
                 $this->uniqueUriDictionary[$href] = null;
             }
         });
-        if ($this->input->getOption('verbose')) {
+        if ($this->input->getOption('talkative')) {
             $this->output->writeln(print_r($collection, true));
         }
         return $collection;
@@ -189,7 +194,7 @@ class ScrapCommand extends ContainerAwareCommand
     {
         $minutes = explode(' ', $minutes);
         foreach ($minutes as $minute) {
-            $minute = rtrim($minute, 'A');
+            $minute = filter_var($minute, FILTER_SANITIZE_NUMBER_INT);
             if (is_numeric($minute)) {
                 $line->addDeparture(new Departure($day, new \DateTime("$hour:$minute")));
             }

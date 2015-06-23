@@ -5,17 +5,17 @@
     <div class="col-sm-4">
         <div class="input-group search">
             <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-            <input type="search" class="form-control" ng-model="list.search" placeholder="Search for..." ng-keyup="list.search.length > 0 ? (list.isOpen = true) && (list.closeOthers = false) : (list.isOpen = false) && (list.closeOthers = true)"/>
-            <span ng-show="!!list && list.search" class="input-group-addon"><i class="glyphicon glyphicon-remove-circle" ng-click="list = null"></i></span>
+            <input type="search" class="form-control" ng-model="list.search" placeholder="Search for..." ng-keyup="list.onChanged()"/>
+            <span ng-show="!!list.search" class="input-group-addon"><i class="glyphicon glyphicon-remove-circle" ng-click="list.reset()"></i></span>
         </div>
         <hr>
-        <accordion close-others="list.closeOthers" ng-init="list.closeOthers = true">
-            <accordion-group ng-repeat="(id, group) in model.stations" is-open="list.isOpen">
+        <accordion close-others="list.closeOthers">
+            <accordion-group ng-repeat="(id, group) in model.stations" is-open="list.items[id].isOpen" is-disabled="list.items[id].isOpen && !list.closeOthers">
                 <accordion-heading>
                     <div class="text-center">{{ id }}</div>
                 </accordion-heading>
                 <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="station in group | filter: {$: list.search} | orderBy: '+name'">
+                    <li class="list-group-item" ng-repeat="station in group | filter: {name: list.search} | orderBy: '+name'">
                         <a ui-sref="home.station({id: station.id})">{{ station.name }}</a>
                     </li>
                 </ul>

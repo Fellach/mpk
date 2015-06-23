@@ -33,7 +33,7 @@ class StationRepository extends DocumentRepository
 
         $result = [];
         foreach ($stations as $station) {
-            $result[$station->getName()[0]][] = [
+            $result[mb_substr($station->getName(), 0, 1, 'UTF-8')][] = [
                 "name" => $station->getName(),
                 "id" => $station->getId(),
             ];
