@@ -14,15 +14,19 @@
     }]);
     
     app.controller('StationController', function ($scope, $stateParams, $interval, ApiService) {
-        $scope.model.station = null;
         
         var init = function() {
+            console.log('wtf');
+            $scope.model.station = null;
             $scope.model = $scope.$parent.model;
             
             ApiService.getStation($stateParams.id);
             
             var interval = $interval(function(){
+                console.log(new Date($scope.model.station.time).getMinutes() );
+                console.log(new Date().getMinutes());
                 if (new Date($scope.model.station.time).getMinutes() !== new Date().getMinutes()) {
+                    console.log('dwnl');
                     ApiService.getStation($stateParams.id);
                 }
             }, 1000);
