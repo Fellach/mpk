@@ -19,6 +19,7 @@
                     .get(baseUrl + 'stations/' + id)
                     .success(function(response){
                         data.station = response.station;
+                        data.station.time = new Date();
                     })
                     .error(function(){
                         console.log('error');
@@ -35,10 +36,10 @@
                     });
                 }                
             },
-            getStation: function(id){
-                if (!CacheService.getStation(id)) {
+            getStation: function(id, group){
+                if (!CacheService.getStation(id, group)) {
                     getStation(id).then(function(){
-                        CacheService.setStation(id);
+                        CacheService.setStation(id, group);
                     });
                 }
             },

@@ -2,7 +2,7 @@
 
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider.state('home.station', {
-            url: 'station/:id',
+            url: 'station/:group/:id',
             views: {
                 "station": {
                     controller: 'StationController',
@@ -14,20 +14,16 @@
     }]);
     
     app.controller('StationController', function ($scope, $stateParams, $interval, ApiService) {
+        $scope.model.station = null;
         
         var init = function() {
-            console.log('wtf');
-            $scope.model.station = null;
             $scope.model = $scope.$parent.model;
-            
-            ApiService.getStation($stateParams.id);
+
+            ApiService.getStation($stateParams.id, $stateParams.group);
             
             var interval = $interval(function(){
-                console.log(new Date($scope.model.station.time).getMinutes() );
-                console.log(new Date().getMinutes());
                 if (new Date($scope.model.station.time).getMinutes() !== new Date().getMinutes()) {
-                    console.log('dwnl');
-                    ApiService.getStation($stateParams.id);
+                    ApiService.getStation($stateParams.id, $stateParams.group);
                 }
             }, 1000);
             

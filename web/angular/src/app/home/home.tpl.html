@@ -16,7 +16,7 @@
                 </accordion-heading>
                 <ul class="list-group">
                     <li class="list-group-item" ng-repeat="station in group | filter: {name: list.search} | orderBy: '+name'">
-                        <a ui-sref="home.station({id: station.id})">{{ station.name }}</a>
+                        <a ui-sref="home.station({id: station.id, group: id})">{{ station.name }}</a>
                     </li>
                 </ul>
             </accordion-group>

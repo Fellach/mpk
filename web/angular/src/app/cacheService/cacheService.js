@@ -17,33 +17,29 @@
                 }
                 return false;
             },
-            getStation: function(id){
-                for (var i in cachedData.stations) {
-                    for (var j = 0; j < cachedData.stations[i].length; j++) {
-                        if (cachedData.stations[i][j].id === id) {
-                            if (!cachedData.stations[i][j].details || new Date(cachedData.stations[i][j].details.time).getMinutes() !== new Date().getMinutes()){
-                                return false;
-                            }
-                            cachedData.station = cachedData.stations[i][j].details;
-                            return true;
+            getStation: function(id, group){
+                for (var j = 0; j < cachedData.stations[group].length; j++) {
+                    if (cachedData.stations[group][j].id === id) {
+                        if (!cachedData.stations[group][j].details || new Date(cachedData.stations[group][j].details.time).getMinutes() !== new Date().getMinutes()){
+                            return false;
                         }
+                        cachedData.station = cachedData.stations[group][j].details;
+                        return true;
                     }
-                }
+                }                
                 return false;
             },
             setStations: function(){
                 localStorage.setItem(storageKey, JSON.stringify(cachedData.stations));
                 localStorage.setItem(storageKeyDate, new Date());
             },
-            setStation: function(id){
-                for (var i in cachedData.stations) {
-                    for (var j = 0; j < cachedData.stations[i].length; j++) {
-                        if (cachedData.stations[i][j].id === id) {
-                            cachedData.stations[i][j].details = cachedData.station;
-                            return;
-                        }
+            setStation: function(id, group){
+                for (var j = 0; j < cachedData.stations[group].length; j++) {
+                    if (cachedData.stations[group][j].id === id) {
+                        cachedData.stations[group][j].details = cachedData.station;
+                        return;
                     }
-                }
+                }                
             }
         };
     });
