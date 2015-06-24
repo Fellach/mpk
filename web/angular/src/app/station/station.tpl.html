@@ -1,10 +1,9 @@
-<div ng-show="model.station === null" class="loading"><div class="loader"></div></div>
 <div sticky>
     <h2>
-        {{ model.station.name }}
-        <small>{{ model.station.time | date : 'H:mm' }}</small>
+        {{ model.station.name }}&nbsp;<small>{{ model.station.time | date : 'H:mm' }}</small>
     </h2>
     <hr>
+    <div ng-show="model.station === null" class="loading"><div class="loader"></div></div>
     <table class="table table-striped table-responsive departures">
         <thead>
             <tr>

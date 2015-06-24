@@ -2,3 +2,5 @@ RewriteEngine on
 RewriteCond %{HTTP_HOST} mpk\.dev [NC]
 RewriteCond %{REQUEST_URI} ^/$
 RewriteRule ^(.*)$ /dev/$1 [L]
+
+errorDocument 404 /dev/index.html

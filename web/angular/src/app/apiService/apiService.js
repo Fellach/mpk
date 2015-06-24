@@ -1,6 +1,6 @@
 (function(app) {
 
-    app.factory('ApiService', function ($http, CacheService) {
+    app.factory('ApiService', function ($http, $state, CacheService) {
         
         var data = { stations: [], station: {} },
             
@@ -18,6 +18,10 @@
                 return $http
                     .get(baseUrl + 'stations/' + id)
                     .success(function(response){
+                        if (!response.station) {
+                            $state.go('home');
+                            return false;
+                        }
                         data.station = response.station;
                         data.station.time = new Date();
                     })

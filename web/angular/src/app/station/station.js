@@ -2,14 +2,13 @@
 
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider.state('home.station', {
-            url: 'station/:group/:id',
+            url: 'station/:id/:name',
             views: {
                 "station": {
                     controller: 'StationController',
                     templateUrl: 'station/station.tpl.html'
                 }
-            },
-            data:{ pageTitle: 'Station' }
+            }
         });
     }]);
     
@@ -19,13 +18,11 @@
         var init = function() {
             $scope.model = $scope.$parent.model;
 
-            ApiService.getStation($stateParams.id, $stateParams.group);
-            
-            var interval = $interval(function(){
-                if (new Date($scope.model.station.time).getMinutes() !== new Date().getMinutes()) {
-                    ApiService.getStation($stateParams.id, $stateParams.group);
+            var interval = $interval((function(){
+                if (!$scope.model.station || new Date($scope.model.station.time).getMinutes() !== new Date().getMinutes()) {
+                    ApiService.getStation($stateParams.id, $stateParams.name[0]);
                 }
-            }, 1000);
+            })(), 1000);
             
             $scope.$on('$destroy', function () { 
                 $interval.cancel(interval); 
