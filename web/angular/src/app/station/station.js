@@ -18,12 +18,12 @@
         var init = function() {
             $scope.model = $scope.$parent.model;
 
-            var interval = $interval(function refresh(){
+            var interval = $interval((function refresh(){
                 if (!$scope.model.station || new Date($scope.model.station.time).getMinutes() !== new Date().getMinutes()) {
                     ApiService.getStation($stateParams.id, $stateParams.name[0]);
                 }
                 return refresh;
-            }(), 1000);
+            })(), 1000);
             
             $scope.$on('$destroy', function () { 
                 $interval.cancel(interval); 
