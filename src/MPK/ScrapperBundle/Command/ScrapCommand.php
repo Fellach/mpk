@@ -90,15 +90,18 @@ class ScrapCommand extends ContainerAwareCommand
                 $this->setCrawler(str_replace('r', 't', $lineUri));
                 try {
                     $this->crawler->filter('.celldepart > table > tr ')->each(function(Crawler $row, $i) use (&$line) {
-                        $this->setDepartures($row, $line);
+                        if ($i > 0) {
+                            $this->setDepartures($row, $line);
+                        }
                     });
+                    $station->addLine($line);
+                    
                 } catch (\Exception $e) {
-                    $this->output->writeln(sprintf("%s: %s", $lineUri, $e->getMessage()));
-                    continue;
+                    $this->output->writeln(sprintf("lineAndDirection: %s: %s", $lineUri, $e->getMessage()));
+                } finally {
+                    unset($lineWithDirection, $lineUri, $lineAndDirection);
                 }
 
-                $station->addLine($line);
-                unset($lineWithDirection, $lineUri, $lineAndDirection);
             }
 
             $em->persist($station);
@@ -132,7 +135,7 @@ class ScrapCommand extends ContainerAwareCommand
                 'iso-8859-2'
             );
         } catch (\Exception $e) {
-            $this->output->writeln(sprintf("%s: %s", $uri, $e->getMessage()));
+            $this->output->writeln(sprintf("setCrawler: %s: %s", $uri, $e->getMessage()));
         }
     }
 
@@ -185,6 +188,24 @@ class ScrapCommand extends ContainerAwareCommand
                 Station::holiday, 
                 $row->filter('td')->eq(4)->text(), 
                 $row->filter('td')->eq(5)->text(), 
+                $line
+                );
+        } elseif ($row->filter('td')->count() === 4) {
+            $this->setDeparture(
+                Station::dayweek, 
+                $row->filter('td')->eq(0)->text(), 
+                $row->filter('td')->eq(1)->text(), 
+                $line
+                );
+            $this->setDeparture(
+                Station::saturday, 
+                $row->filter('td')->eq(2)->text(), 
+                $row->filter('td')->eq(3)->text(), 
+                $line
+                );
+            $this->setDeparture(Station::holiday, 
+                $row->filter('td')->eq(2)->text(), 
+                $row->filter('td')->eq(3)->text(), 
                 $line
                 );
         } elseif ($row->filter('td')->count() === 2) {
