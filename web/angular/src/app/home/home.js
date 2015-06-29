@@ -23,6 +23,31 @@
 
         init();
     });
+    
+    
+    app.filter('orderGroups', function(){
+        return function(input) {
+            
+            var keys = Object.keys(input).sort(function(a, b) {
+                return a.localeCompare(b);
+            });
+            
+            var sorted = [];
+            for (var i = 0; i < keys.length; i++) {
+                sorted.push(input[keys[i]]);
+                sorted[sorted.length - 1].id = keys[i];
+            }
+            return sorted;
+        };
+    });
+    
+    app.filter('orderPlNames', function(){
+        return function(input) {
+            return input.sort(function(a, b) {
+                return a.name.localeCompare(b.name);
+            });
+        };
+    });
 
     function list() {
         return {

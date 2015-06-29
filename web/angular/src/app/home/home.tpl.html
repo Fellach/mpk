@@ -10,12 +10,12 @@
         </div>
         <hr>
         <accordion close-others="list.closeOthers">
-            <accordion-group ng-repeat="(id, group) in model.stations" ng-init="list.items[id].isOpen = false" is-open="list.items[id].isOpen" is-disabled="list.items[id].isOpen && !list.closeOthers">
+            <accordion-group ng-repeat="group in model.stations | orderGroups" ng-init="list.items[group.id].isOpen = false" is-open="list.items[group.id].isOpen" is-disabled="list.items[group.id].isOpen && !list.closeOthers">
                 <accordion-heading>
-                    <div class="text-center">{{ id }}</div>
+                    <div class="text-center">{{ group.id }}</div>
                 </accordion-heading>
                 <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="station in group | filter: {name: list.search} | orderBy: '+name'">
+                    <li class="list-group-item" ng-repeat="station in group | filter: {name: list.search} | orderPlNames">
                         <a ui-sref="home.station({id: station.id, name: station.name })">{{ station.name }}</a>
                     </li>
                 </ul>
