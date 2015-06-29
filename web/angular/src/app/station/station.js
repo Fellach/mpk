@@ -32,6 +32,13 @@
 
         init();
     });
+    
+    app.filter('arrivalFilter', function() {
+        return function(input) {
+            var h = Math.floor(input / 60);
+            return input === 0 ? 'now' : ((h > 0 ? (h + ':') :  '') + (input % 60) + ' min');
+        };
+    });
 
 }(angular.module("mpk.station", [
     'ui.router',
