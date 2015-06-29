@@ -19,7 +19,7 @@
             $scope.model = $scope.$parent.model;
 
             var interval = $interval((function refresh(){
-                if (!$scope.model.station || new Date($scope.model.station.time).getMinutes() !== new Date().getMinutes()) {
+                if (!$scope.model.station || new Date().getSeconds() === 1) {
                     ApiService.getStation($stateParams.id, $stateParams.name[0]);
                 }
                 return refresh;

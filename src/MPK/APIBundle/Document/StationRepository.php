@@ -41,9 +41,9 @@ class StationRepository extends DocumentRepository
         return $result;
     }
 
-    public function findStation($id)
+    public function findStation($id, $date)
     {
-        $date = new \DateTime();
+        $date = new \DateTime($date);
 
         $station = $this->createQueryBuilder('Station')
                 ->field('id')->equals($id)

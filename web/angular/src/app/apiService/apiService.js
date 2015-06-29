@@ -16,14 +16,13 @@
                 },
             getStation = function(id){
                 return $http
-                    .get(baseUrl + 'stations/' + id)
+                    .post(baseUrl + 'stations/' + id, {date: new Date()})
                     .success(function(response){
                         if (!response.station) {
                             $state.go('home');
                             return false;
                         }
                         data.station = response.station;
-                        data.station.time = new Date();
                     })
                     .error(function(){
                         console.log('error');

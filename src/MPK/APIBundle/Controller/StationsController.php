@@ -21,12 +21,13 @@ class StationsController extends FOSRestController
     }
 
     /**
-     * @Rest\Get("/stations/{id}")
+     * @Rest\Post("/stations/{id}")
      * @param string $id
      */
     public function getStationAction($id)
     {
-        $station = $this->get('doctrine_mongodb')->getRepository('MPKAPIBundle:Station')->findStation($id);
+        $data = json_decode($this->get('request')->getContent());
+        $station = $this->get('doctrine_mongodb')->getRepository('MPKAPIBundle:Station')->findStation($id, $data->date);
 
         return [
             "station" => $station
