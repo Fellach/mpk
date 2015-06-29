@@ -75,9 +75,10 @@ class StationRepository extends DocumentRepository
             if ($departure->getDay() === $day) {
                 
                 $diff = $date->diff(new \DateTime($departure->getDate()->format('H:i')));
+                $diff->s = 0;
                 $arrival = ($diff->i + ($diff->h * 60)) * ($diff->invert === 1 ? -1 : 1 );
                 
-                if ($arrival >= 0){
+                if ($arrival >= 0 && $diff->invert === 0){
                     $departures[] = [
                         "line" => $line->getName(),
                         "direction" => $line->getDirection(),
